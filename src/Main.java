@@ -1,8 +1,10 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 
 public class Main {
     public static void main(String[] args) {
+        Table table = new Table();
         InputBuffer inputBuffer;
          Scanner scanner = new Scanner(System.in);
          while (true) {
@@ -42,20 +44,23 @@ public class Main {
                          continue;
              }
 
-             executeStatement(statement);
+             executeStatement(statement,table);
              System.out.println("Executed.");
          }
     }
     static Statement extract_data(Scanner command_scanner,Statement statement,InputBuffer inputBuffer ) {
+        int id;
+        String email;
+        String username;
         if (command_scanner.hasNextInt()){
-            statement.id = command_scanner.nextInt();
+            id = command_scanner.nextInt();
         } else {
             System.out.println("Syntax Statement '" + inputBuffer.getBuffer() + "'");
             return null;
         }
 
         if (command_scanner.hasNext()){
-            statement.username = command_scanner.next();
+            username = command_scanner.next();
         } else {
             System.out.println("Syntax Statement '" + inputBuffer.getBuffer() + "'");
             return null;
@@ -63,25 +68,48 @@ public class Main {
         }
 
         if (command_scanner.hasNext()){
-            statement.email = command_scanner.next();
+            email = command_scanner.next();
         } else {
             System.out.println("Syntax Statement '" + inputBuffer.getBuffer() + "'");
             return null;
         }
+
+        statement.row =new  Row(
+                id,
+                username,
+                email
+        );
 
         return statement;
     }
-    static void executeStatement(Statement statement) {
+    static Table execute_insert(Statement statement,Table table){
+        table.addRow(statement.row);
+        return table;
+    }
+
+    static Table execute_select(Statement statement,Table table){
+        System.out.println("Executing select.");
+        int total_number_page = (table.getNumRows() + table.getRowsPerPage()  - 1) / table.getRowsPerPage();
+        for(int i =0 ; i < total_number_page ;i++) {
+            Row[] rows = table.getAllRowsFromPage(i);
+            Arrays.stream(rows).iterator().forEachRemaining(row -> {
+                if (row != null) {
+                    System.out.println("id " + row.getId() + " username " + row.getUsername() + " email " + row.getEmail());
+                }
+            });
+        }
+        return table;
+    }
+
+
+    static Table executeStatement(Statement statement,Table table) {
         switch (statement.type){
             case STATEMENT_INSERT:
-                System.out.println("Insert statement");
-                break;
+                return execute_insert(statement, table);
                 case STATEMENT_SELECT:
-                    System.out.println("Select statement");
-                    break;
-
-
+                    return execute_select(statement, table);
         }
+        return table;
     }
     static PrepareResult prepareStatement(String command) {
 
