@@ -22,7 +22,17 @@ public class Main {
 
              switch (prepareStatement(inputBuffer.getBuffer())) {
                  case PREPARE_INSERT_SUCCESS:
+                     Scanner command_scanner = new Scanner(inputBuffer.getBuffer());
+                     String command_break_down = command_scanner.next();
+                     if (!command_break_down.equals("insert")) {
+                         System.out.println("Syntax Statement '" + inputBuffer.getBuffer() + "'");
+                         continue;
+                     }
                      statement.type = StatementType.STATEMENT_INSERT;
+                     statement  = extract_data(command_scanner,statement,inputBuffer);
+                     if(statement == null){
+                         continue;
+                     }
                      break;
                  case PREPARE_SELECT_SUCCESS:
                      statement.type = StatementType.STATEMENT_SELECT;
@@ -35,6 +45,31 @@ public class Main {
              executeStatement(statement);
              System.out.println("Executed.");
          }
+    }
+    static Statement extract_data(Scanner command_scanner,Statement statement,InputBuffer inputBuffer ) {
+        if (command_scanner.hasNextInt()){
+            statement.id = command_scanner.nextInt();
+        } else {
+            System.out.println("Syntax Statement '" + inputBuffer.getBuffer() + "'");
+            return null;
+        }
+
+        if (command_scanner.hasNext()){
+            statement.username = command_scanner.next();
+        } else {
+            System.out.println("Syntax Statement '" + inputBuffer.getBuffer() + "'");
+            return null;
+
+        }
+
+        if (command_scanner.hasNext()){
+            statement.email = command_scanner.next();
+        } else {
+            System.out.println("Syntax Statement '" + inputBuffer.getBuffer() + "'");
+            return null;
+        }
+
+        return statement;
     }
     static void executeStatement(Statement statement) {
         switch (statement.type){
@@ -49,8 +84,9 @@ public class Main {
         }
     }
     static PrepareResult prepareStatement(String command) {
+
         if (command.startsWith("insert")) {
-                    return PrepareResult.PREPARE_INSERT_SUCCESS;
+            return PrepareResult.PREPARE_INSERT_SUCCESS;
         }
         if (command.startsWith("select")) {
             return PrepareResult.PREPARE_SELECT_SUCCESS;
