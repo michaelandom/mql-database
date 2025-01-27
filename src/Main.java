@@ -44,8 +44,9 @@ public class Main {
                          continue;
              }
 
-             executeStatement(statement,table);
-             System.out.println("Executed.");
+             if(executeStatement(statement,table)) {
+                 System.out.println("Executed.");
+             }
          }
     }
     static Statement extract_data(Scanner command_scanner,Statement statement,InputBuffer inputBuffer ) {
@@ -82,12 +83,12 @@ public class Main {
 
         return statement;
     }
-    static Table execute_insert(Statement statement,Table table){
+    static void execute_insert(Statement statement,Table table){
+        System.out.println("Executing insert.");
         table.addRow(statement.row);
-        return table;
     }
 
-    static Table execute_select(Statement statement,Table table){
+    static void execute_select(Statement statement,Table table){
         System.out.println("Executing select.");
         int total_number_page = (table.getNumRows() + table.getRowsPerPage()  - 1) / table.getRowsPerPage();
         for(int i =0 ; i < total_number_page ;i++) {
@@ -98,18 +99,19 @@ public class Main {
                 }
             });
         }
-        return table;
     }
 
 
-    static Table executeStatement(Statement statement,Table table) {
+    static boolean executeStatement(Statement statement,Table table) {
         switch (statement.type){
             case STATEMENT_INSERT:
-                return execute_insert(statement, table);
+                execute_insert(statement, table);
+                return true;
                 case STATEMENT_SELECT:
-                    return execute_select(statement, table);
+                     execute_select(statement, table);
+                    return true;
         }
-        return table;
+        return false;
     }
     static PrepareResult prepareStatement(String command) {
 
