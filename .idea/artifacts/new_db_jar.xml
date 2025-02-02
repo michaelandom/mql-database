@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="new_db:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/new_db_jar</output-path>
+    <root id="root">
+      <element id="archive" name="new_db.jar">
+        <element id="module-output" name="new_db" />
+      </element>
+      <element id="library" level="module" name="JUnit4" module-name="new_db" />
+      <element id="library" level="project" name="junit" />
+    </root>
+  </artifact>
+</component>

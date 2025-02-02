@@ -70,11 +70,16 @@ public class Table {
 //    }
 
     public void addRow(Row row) {
-
         if (numRows < TABLE_MAX_ROWS) {
-            int pageIndex = numRows / PAGE_SIZE;
-            int rowIndex = numRows % PAGE_SIZE;
-
+            int pageIndex = numRows / ROWS_PER_PAGE;
+            int rowIndex = numRows % ROWS_PER_PAGE;
+//            System.out.println("ROWS_PER_PAGE: " + ROWS_PER_PAGE);
+//            System.out.println("ROW_SIZE: " + ROW_SIZE);
+//            System.out.println("numRows: " + numRows);
+//            System.out.println("PAGE_SIZE: " + PAGE_SIZE);
+//            System.out.println("pageIndex: " + pageIndex);
+//            System.out.println("rowIndex: " + rowIndex);
+//            System.out.println("TABLE_MAX_ROWS: " + TABLE_MAX_ROWS);
             byte[] serializedRow = row.serialize();
             System.arraycopy(serializedRow, 0, pages[pageIndex], rowIndex * ROW_SIZE, ROW_SIZE);
             numRows++;

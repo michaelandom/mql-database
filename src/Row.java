@@ -6,8 +6,8 @@ public class Row {
     private String username;
     private String email;
     public static final int ID_SIZE = Integer.BYTES;
-    public static final int USERNAME_SIZE = sizeOfAttribute("username");
-    public static final int EMAIL_SIZE = sizeOfAttribute("email");
+    public static final int USERNAME_SIZE = 32;
+    public static final int EMAIL_SIZE = 255;
     public static final int ID_OFFSET = 0;
     public static final int USERNAME_OFFSET = ID_OFFSET + ID_SIZE;
     public static final int EMAIL_OFFSET = USERNAME_OFFSET + USERNAME_SIZE;
