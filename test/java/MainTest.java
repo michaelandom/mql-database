@@ -85,5 +85,37 @@ class MainTest {
         String[] result = runScript(commands);
         String expected = "Table is full";
         assertEquals(expected, result[result.length-3]);
+    } @Test
+    public void testInsertStringRows() throws Exception {
+        List<String> commands = new ArrayList<>();
+        String long_username = "a".repeat(32);
+        String long_email = "a".repeat(255);
+        commands.add("insert " + 1 + " "+ long_username+ " "+long_email);
+        String[] result = runScript(commands);
+        String expected = "Executed.";
+        assertEquals(expected, result[result.length-2]);
+    }
+    @Test
+    public void testInsertMaxStringInARows() throws Exception {
+        List<String> commands = new ArrayList<>();
+        String long_username = "a".repeat(32);
+        String long_email = "a".repeat(255);
+        commands.add("insert " + 1 + " #"+ long_username+ " #"+long_email);
+        String[] result = runScript(commands);
+        String[] expected = {"Insert username exceeds the limit.","Insert email exceeds the limit."};
+        assertEquals(expected[0], result[result.length-3]);
+        assertEquals(expected[1], result[result.length-2]);
+    }
+
+    @Test
+    public void testInsertingNegativeId() throws Exception {
+        List<String> commands = new ArrayList<>();
+        String long_username = "a".repeat(32);
+        String long_email = "a".repeat(255);
+        commands.add("insert " + -1 + " #"+ long_username+ " #"+long_email);
+        String[] result = runScript(commands);
+        String[] expected = {"Insert username exceeds the limit.","Insert email exceeds the limit."};
+        assertEquals(expected[0], result[result.length-3]);
+        assertEquals(expected[1], result[result.length-2]);
     }
 }

@@ -83,9 +83,34 @@ public class Main {
 
         return statement;
     }
-    static void execute_insert(Statement statement,Table table){
+    static Boolean execute_insert(Statement statement,Table table){
         System.out.println("Executing insert.");
-        table.addRow(statement.row);
+        if(!validation_error(statement)){
+            table.addRow(statement.row);
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    static Boolean validation_error(Statement statement){
+        String error = "";
+        if(statement.row.getId() < 0){
+            error += "Insert ID must be positive.";
+        }
+        if(statement.row.getUsername().length() > Row.USERNAME_SIZE){
+            error += "\n";
+            error += "Insert username exceeds the limit.";
+        }
+        if (statement.row.getEmail().length() > Row.EMAIL_SIZE){
+            error += "\n";
+            error += "Insert email exceeds the limit.";
+        }
+        if(!error.isEmpty()){
+            System.out.println(error);
+            return true;
+        }
+        return false;
     }
 
     static void execute_select(Statement statement,Table table){
@@ -105,8 +130,7 @@ public class Main {
     static boolean executeStatement(Statement statement,Table table) {
         switch (statement.type){
             case STATEMENT_INSERT:
-                execute_insert(statement, table);
-                return true;
+                return execute_insert(statement, table);
                 case STATEMENT_SELECT:
                      execute_select(statement, table);
                     return true;

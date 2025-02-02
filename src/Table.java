@@ -80,6 +80,7 @@ public class Table {
 //            System.out.println("pageIndex: " + pageIndex);
 //            System.out.println("rowIndex: " + rowIndex);
 //            System.out.println("TABLE_MAX_ROWS: " + TABLE_MAX_ROWS);
+
             byte[] serializedRow = row.serialize();
             System.arraycopy(serializedRow, 0, pages[pageIndex], rowIndex * ROW_SIZE, ROW_SIZE);
             numRows++;
